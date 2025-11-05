@@ -1,6 +1,6 @@
 # Sistema Integrado de Gestão de Chamados
 
-Este repositório contém uma API desenvolvida em ASP.NET Core para gerenciamento inteligente de chamados de suporte técnico. O backend está preparado para integração com clientes web, mobile ou desktop e utiliza MySQL como banco de dados principal.
+Este repositório contém uma API desenvolvida em ASP.NET Core para gerenciamento inteligente de chamados de suporte técnico. O backend está preparado para integração com clientes web, mobile ou desktop e utiliza MS SQL Server como banco de dados principal.
 
 ## Recursos Principais
 
@@ -20,7 +20,7 @@ Este repositório contém uma API desenvolvida em ASP.NET Core para gerenciament
 
 ## Configuração
 
-1. Ajuste a string de conexão em `appsettings.json` com as credenciais do seu servidor MySQL.
+1. Ajuste a string de conexão em `appsettings.json` com as credenciais do servidor MS SQL Server.
 2. Execute as migrações do Entity Framework (não incluídas neste repositório) para criar o esquema do banco de dados.
 3. Inicie a API com `dotnet run --project src/SupportSystem.Api/SupportSystem.Api.csproj` e acesse a documentação interativa pelo Swagger em `https://localhost:5001/swagger`.
 

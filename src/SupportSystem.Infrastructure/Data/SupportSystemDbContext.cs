@@ -3,56 +3,36 @@ using SupportSystem.Domain.Entities;
 
 namespace SupportSystem.Infrastructure.Data;
 
-/// <summary>
-/// Contexto de banco de dados responsável por mapear as entidades para o MySQL.
-/// </summary>
+/// Contexto de banco de dados responsável por mapear as entidades para o MS SQL Server.
 public class SupportSystemDbContext : DbContext
 {
-    /// <summary>
     /// Constrói o contexto utilizando as opções configuradas pela aplicação.
-    /// </summary>
     public SupportSystemDbContext(DbContextOptions<SupportSystemDbContext> options) : base(options)
     {
     }
 
-    /// <summary>
     /// Conjunto de usuários cadastrados.
-    /// </summary>
     public DbSet<User> Users => Set<User>();
 
-    /// <summary>
     /// Conjunto de chamados registrados.
-    /// </summary>
     public DbSet<Ticket> Tickets => Set<Ticket>();
 
-    /// <summary>
     /// Conjunto de históricos de chamados.
-    /// </summary>
     public DbSet<TicketHistory> TicketHistories => Set<TicketHistory>();
 
-    /// <summary>
     /// Conjunto de anexos de chamados.
-    /// </summary>
     public DbSet<TicketAttachment> TicketAttachments => Set<TicketAttachment>();
 
-    /// <summary>
     /// Conjunto de sugestões de conhecimento geradas pela IA.
-    /// </summary>
     public DbSet<TicketKnowledgeBaseSuggestion> TicketKnowledgeBaseSuggestions => Set<TicketKnowledgeBaseSuggestion>();
 
-    /// <summary>
     /// Conjunto de artigos da base de conhecimento.
-    /// </summary>
     public DbSet<KnowledgeBaseArticle> KnowledgeBaseArticles => Set<KnowledgeBaseArticle>();
 
-    /// <summary>
     /// Conjunto de avaliações de atendimento.
-    /// </summary>
     public DbSet<Feedback> Feedbacks => Set<Feedback>();
 
-    /// <summary>
     /// Conjunto de notificações enviadas pela plataforma.
-    /// </summary>
     public DbSet<Notification> Notifications => Set<Notification>();
 
     /// <inheritdoc />

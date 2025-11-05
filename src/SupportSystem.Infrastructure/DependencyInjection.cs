@@ -22,13 +22,13 @@ public static class DependencyInjection
     /// </summary>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<MySqlOptions>(configuration.GetSection("Database"));
+        services.Configure<SqlServerOptions>(configuration.GetSection("Database"));
 
         var connectionString = configuration.GetSection("Database:ConnectionString").Value
             ?? throw new InvalidOperationException("A string de conexão do banco não foi configurada.");
 
         services.AddDbContext<SupportSystemDbContext>(options =>
-            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+            options.UseSqlServer(connectionString));
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
