@@ -5,28 +5,26 @@ using SupportSystem.Domain.Enums;
 
 namespace SupportSystem.Api.Controllers;
 
-/// <summary>
-/// Controlador responsável pela gestão do ciclo de vida dos chamados.
-/// </summary>
+// Controlador responsável pela gestão do ciclo de vida dos chamados.
+// Fornece endpoints para criar, atualizar, recuperar, reabrir e obter histórico.
 [ApiController]
 [Route("api/[controller]")]
 public class TicketsController : ControllerBase
 {
+    // Serviço que encapsula a lógica de domínio dos chamados (CRUD, filtros, histórico).
     private readonly ITicketService _ticketService;
+
+    // Serviço que fornece sugestões da base de conhecimento dado um texto (utilizado ao criar chamados).
     private readonly IKnowledgeBaseService _knowledgeBaseService;
 
-    /// <summary>
-    /// Construtor com injeção dos serviços necessários.
-    /// </summary>
+    // Construtor com injeção dos serviços necessários.
     public TicketsController(ITicketService ticketService, IKnowledgeBaseService knowledgeBaseService)
     {
         _ticketService = ticketService;
         _knowledgeBaseService = knowledgeBaseService;
     }
 
-    /// <summary>
-    /// Lista chamados com filtros opcionais de status e responsáveis.
-    /// </summary>
+    // Lista chamados com paginação e filtros opcionais.
     [HttpGet]
     public async Task<ActionResult> GetAsync(
         [FromQuery] int page = 1,
@@ -36,16 +34,16 @@ public class TicketsController : ControllerBase
         [FromQuery] Guid? technicianId = null,
         CancellationToken cancellationToken = default)
     {
+        // Recupera lista paginada via serviço. O serviço aplica filtros e retorna resultado pronto para a API.
         var result = await _ticketService.GetAsync(page, pageSize, status, requesterId, technicianId, cancellationToken);
         return Ok(result);
     }
 
-    /// <summary>
-    /// Obtém detalhes de um chamado específico.
-    /// </summary>
+    // Obtém detalhes de um chamado específico por Id.
     [HttpGet("{id:guid}")]
     public async Task<ActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
+        // Busca o chamado. Retorna 404 se não encontrado.
         var ticket = await _ticketService.GetByIdAsync(id, cancellationToken);
         if (ticket is null)
         {
@@ -55,24 +53,26 @@ public class TicketsController : ControllerBase
         return Ok(ticket);
     }
 
-    /// <summary>
-    /// Cria um chamado e retorna as sugestões de conhecimento relacionadas.
-    /// </summary>
+    // Cria um novo chamado e retorna sugestões da base de conhecimento relacionadas à descrição.
     [HttpPost]
     public async Task<ActionResult> CreateAsync([FromBody] CreateTicketDto dto, CancellationToken cancellationToken)
     {
+        // Cria o chamado via serviço de domínio.
         var ticket = await _ticketService.CreateAsync(dto, cancellationToken);
 
+        // Solicita sugestões da base de conhecimento com base na descrição informada.
+        // Limita a 3 sugestões por padrão.
         var suggestions = await _knowledgeBaseService.SuggestAsync(dto.Descricao, 3, cancellationToken);
+
+        // Retorna 201 com local do recurso e payload contendo o chamado e as sugestões.
         return CreatedAtAction(nameof(GetByIdAsync), new { id = ticket.Id }, new { ticket, suggestions });
     }
 
-    /// <summary>
-    /// Atualiza informações do chamado, registrando histórico.
-    /// </summary>
+    // Atualiza informações do chamado e registra histórico de alterações.
     [HttpPut("{id:guid}")]
     public async Task<ActionResult> UpdateAsync(Guid id, [FromBody] UpdateTicketDto dto, CancellationToken cancellationToken)
     {
+        // Atualiza via serviço; serviço retorna null se o recurso não existir.
         var updated = await _ticketService.UpdateAsync(id, dto, cancellationToken);
         if (updated is null)
         {
@@ -82,12 +82,11 @@ public class TicketsController : ControllerBase
         return Ok(updated);
     }
 
-    /// <summary>
-    /// Reabre um chamado dentro do prazo estabelecido.
-    /// </summary>
+    // Reabre um chamado dentro do prazo permitido pelo sistema.
     [HttpPost("{id:guid}/reopen")]
     public async Task<ActionResult> ReopenAsync(Guid id, [FromQuery] Guid requesterId, CancellationToken cancellationToken)
     {
+        // Lógica de reabertura delegada ao serviço de tickets (valida prazo, autorizações, etc.).
         var reopened = await _ticketService.ReopenAsync(id, requesterId, cancellationToken);
         if (reopened is null)
         {
@@ -97,12 +96,11 @@ public class TicketsController : ControllerBase
         return Ok(reopened);
     }
 
-    /// <summary>
-    /// Recupera o histórico de interações do chamado.
-    /// </summary>
+    // Recupera o histórico de interações e alterações de um chamado.
     [HttpGet("{id:guid}/history")]
     public async Task<ActionResult> GetHistoryAsync(Guid id, CancellationToken cancellationToken)
     {
+        // Retorna histórico (eventos, comentários, mudanças de status) fornecido pelo serviço.
         var history = await _ticketService.GetHistoryAsync(id, cancellationToken);
         return Ok(history);
     }

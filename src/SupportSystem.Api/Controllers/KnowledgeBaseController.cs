@@ -4,39 +4,36 @@ using SupportSystem.Application.Interfaces;
 
 namespace SupportSystem.Api.Controllers;
 
-/// <summary>
-/// Controlador responsável pela manutenção da base de conhecimento.
-/// </summary>
+// Controlador responsável pela manutenção da base de conhecimento.
+// Expõe endpoints REST para CRUD de artigos, paginação, busca por categoria e sugestões.
 [ApiController]
 [Route("api/[controller]")]
 public class KnowledgeBaseController : ControllerBase
 {
+    // Serviço que encapsula a lógica de negócio e acesso a dados da base de conhecimento.
     private readonly IKnowledgeBaseService _service;
 
-    /// <summary>
-    /// Construtor com injeção do serviço de base de conhecimento.
-    /// </summary>
+    // Construtor com injeção do serviço de base de conhecimento.
+    // A injeção facilita testes e separação de responsabilidades.
     public KnowledgeBaseController(IKnowledgeBaseService service)
     {
         _service = service;
     }
 
-    /// <summary>
-    /// Lista artigos com filtros opcionais por categoria.
-    /// </summary>
+    // Lista artigos com paginação e filtro opcional por categoria.
     [HttpGet]
     public async Task<ActionResult> GetAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string? category = null, CancellationToken cancellationToken = default)
     {
+        // Delega ao serviço a recuperação dos artigos aplicando paginação e filtro de categoria.
         var result = await _service.GetAsync(page, pageSize, category, cancellationToken);
         return Ok(result);
     }
 
-    /// <summary>
-    /// Recupera um artigo específico pelo identificador.
-    /// </summary>
+    // Recupera um artigo específico pelo identificador.
     [HttpGet("{id:guid}")]
     public async Task<ActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
+        // Busca o artigo pelo id; se não existir, retorna 404.
         var article = await _service.GetByIdAsync(id, cancellationToken);
         if (article is null)
         {
@@ -46,22 +43,22 @@ public class KnowledgeBaseController : ControllerBase
         return Ok(article);
     }
 
-    /// <summary>
-    /// Cria um novo artigo na base.
-    /// </summary>
+
+    // Cria um novo artigo na base.
     [HttpPost]
     public async Task<ActionResult> CreateAsync([FromBody] CreateKnowledgeBaseArticleDto dto, CancellationToken cancellationToken)
     {
+        // Validação adicional pode ser aplicada no serviço ou via filtros/atributos.
         var article = await _service.CreateAsync(dto, cancellationToken);
         return CreatedAtAction(nameof(GetByIdAsync), new { id = article.Id }, article);
     }
 
-    /// <summary>
-    /// Atualiza um artigo existente.
-    /// </summary>
+
+    // Atualiza um artigo existente.
     [HttpPut("{id:guid}")]
     public async Task<ActionResult> UpdateAsync(Guid id, [FromBody] UpdateKnowledgeBaseArticleDto dto, CancellationToken cancellationToken)
     {
+        // Chama serviço para atualizar; serviço deve retornar null se não existir o artigo.
         var article = await _service.UpdateAsync(id, dto, cancellationToken);
         if (article is null)
         {
@@ -71,12 +68,11 @@ public class KnowledgeBaseController : ControllerBase
         return Ok(article);
     }
 
-    /// <summary>
-    /// Exclui um artigo da base.
-    /// </summary>
+    // Exclui um artigo da base.
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
+        // O serviço retorna booleano indicando sucesso da operação.
         var deleted = await _service.DeleteAsync(id, cancellationToken);
         if (!deleted)
         {
@@ -86,12 +82,12 @@ public class KnowledgeBaseController : ControllerBase
         return NoContent();
     }
 
-    /// <summary>
-    /// Sugere artigos com base no texto informado.
-    /// </summary>
+
+    // Sugere artigos com base no texto informado (por exemplo, para autocomplete ou busca relacionada).
     [HttpGet("suggestions")]
     public async Task<ActionResult> SuggestAsync([FromQuery] string text, [FromQuery] int limit = 5, CancellationToken cancellationToken = default)
     {
+        // Encaminha para o serviço que pode utilizar análise de texto, similaridade, ou mecanismo de busca.
         var suggestions = await _service.SuggestAsync(text, limit, cancellationToken);
         return Ok(suggestions);
     }
