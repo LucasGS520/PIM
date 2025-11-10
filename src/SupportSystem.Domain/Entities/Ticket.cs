@@ -2,83 +2,51 @@ using SupportSystem.Domain.Enums;
 
 namespace SupportSystem.Domain.Entities;
 
-/// <summary>
-/// Representa um chamado de suporte aberto por um usuário.
-/// </summary>
+// Representa um chamado de suporte aberto por um usuário.
 public class Ticket : BaseEntity
 {
-    /// <summary>
-    /// Título curto para resumir o problema relatado.
-    /// </summary>
+    // Título curto para resumir o problema relatado.
     public string Title { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Descrição detalhada informada pelo solicitante.
-    /// </summary>
+    // Descrição detalhada informada pelo solicitante.
     public string Description { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Categoria atribuída ao chamado, seja manualmente ou pela IA.
-    /// </summary>
+    // Categoria atribuída ao chamado, seja manualmente ou pela IA.
     public string Category { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Prioridade aplicada ao chamado para orientar o SLA.
-    /// </summary>
+    // Prioridade aplicada ao chamado para orientar o SLA.
     public TicketPriority Priority { get; set; } = TicketPriority.Media;
 
-    /// <summary>
-    /// Situação atual do chamado dentro do fluxo de atendimento.
-    /// </summary>
+    // Situação atual do chamado dentro do fluxo de atendimento.
     public TicketStatus Status { get; set; } = TicketStatus.Aberto;
 
-    /// <summary>
-    /// Prazo limite sugerido pela plataforma para atendimento.
-    /// </summary>
+    // Prazo limite sugerido pela plataforma para atendimento.
     public DateTime? DueDate { get; set; }
 
-    /// <summary>
-    /// Data de encerramento efetiva do chamado.
-    /// </summary>
+    // Data de encerramento efetiva do chamado.
     public DateTime? ClosedAt { get; set; }
 
-    /// <summary>
-    /// Identificador do solicitante responsável pela abertura.
-    /// </summary>
+    // Identificador do solicitante responsável pela abertura.
     public Guid RequesterId { get; set; }
 
-    /// <summary>
-    /// Entidade navegacional para o solicitante.
-    /// </summary>
+    // Entidade navegacional para o solicitante.
     public User? Requester { get; set; }
 
-    /// <summary>
-    /// Identificador do técnico responsável pelo atendimento atual.
-    /// </summary>
+    // Identificador do técnico responsável pelo atendimento atual.
     public Guid? AssigneeId { get; set; }
 
-    /// <summary>
-    /// Entidade navegacional para o técnico designado.
-    /// </summary>
+    // Entidade navegacional para o técnico designado.
     public User? Assignee { get; set; }
 
-    /// <summary>
-    /// Histórico das interações registradas no chamado.
-    /// </summary>
+    // Histórico das interações registradas no chamado.
     public ICollection<TicketHistory> History { get; set; } = new List<TicketHistory>();
 
-    /// <summary>
-    /// Anexos adicionados ao chamado para evidências.
-    /// </summary>
+    // Anexos adicionados ao chamado para evidências.
     public ICollection<TicketAttachment> Attachments { get; set; } = new List<TicketAttachment>();
 
-    /// <summary>
-    /// Sugestões de conhecimento vinculadas ao chamado.
-    /// </summary>
+    // Sugestões de conhecimento vinculadas ao chamado.
     public ICollection<TicketKnowledgeBaseSuggestion> KnowledgeBaseSuggestions { get; set; } = new List<TicketKnowledgeBaseSuggestion>();
 
-    /// <summary>
-    /// Registra se o chamado pode ser reaberto e até quando.
-    /// </summary>
+    // Registra se o chamado pode ser reaberto e até quando.
     public DateTime? ReopenAllowedUntil { get; set; }
 }

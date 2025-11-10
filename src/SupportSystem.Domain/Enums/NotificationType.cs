@@ -1,8 +1,6 @@
 namespace SupportSystem.Domain.Enums;
 
-/// <summary>
-/// Lista os tipos de notificações possíveis.
-/// </summary>
+// Lista os tipos de notificações possíveis.
 public enum NotificationType
 {
     Email = 0,

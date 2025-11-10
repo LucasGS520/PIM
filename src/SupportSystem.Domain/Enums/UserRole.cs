@@ -1,8 +1,6 @@
 namespace SupportSystem.Domain.Enums;
 
-/// <summary>
-/// Define os perfis de acesso permitidos no sistema.
-/// </summary>
+// Define os perfis de acesso permitidos no sistema.
 public enum UserRole
 {
     Cliente = 0,

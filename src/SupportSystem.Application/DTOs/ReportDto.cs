@@ -1,14 +1,13 @@
 namespace SupportSystem.Application.DTOs;
 
-/// <summary>
-/// Representa o conjunto principal de indicadores apresentados aos gestores.
-/// </summary>
+// Representa o conjunto principal de indicadores apresentados aos gestores.
+// DTO (Data Transfer Object) usado para transportar métricas entre camadas da aplicação.
 public record DashboardMetricsDto(
-    double TempoMedioResolucaoHoras,
-    int ChamadosAbertos,
-    int ChamadosResolvidosMes,
-    IDictionary<string, int> ChamadosPorCategoria,
-    IDictionary<string, int> ChamadosPorTecnico,
-    double SatisfacaoMedia,
-    double TaxaReabertura
+    double TempoMedioResolucaoHoras, // Tempo médio de resolução dos chamados no período, em horas.
+    int ChamadosAbertos, // Quantidade de chamados atualmente abertos.
+    int ChamadosResolvidosMes, // Quantidade de chamados resolvidos no mês.
+    IDictionary<string, int> ChamadosPorCategoria, // Dicionário usado para relatórios e gráficos.
+    IDictionary<string, int> ChamadosPorTecnico, // Dicionário para distribuição por responsável.
+    double SatisfacaoMedia, // Média de satisfação dos usuários no período
+    double TaxaReabertura // Percentual de chamados reabertos no período
 );

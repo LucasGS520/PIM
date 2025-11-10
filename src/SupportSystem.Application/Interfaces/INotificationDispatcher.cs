@@ -1,14 +1,13 @@
 using SupportSystem.Domain.Entities;
 
-namespace SupportSystem.Application.Interfaces;
-
-/// <summary>
-/// Define um mecanismo de envio de notificações automáticas.
-/// </summary>
-public interface INotificationDispatcher
+namespace SupportSystem.Application.Interfaces
 {
-    /// <summary>
-    /// Envia mensagem informativa relacionada a um chamado para as partes interessadas.
-    /// </summary>
-    Task DispatchTicketUpdateAsync(Ticket ticket, string message, CancellationToken cancellationToken);
+    // Define um mecanismo para envio de notificações automáticas.
+    // Implementações desta interface devem encapsular a lógica de transporte (ex.: envio de e-mail, SMS, push notification) e garantir tratamento de erros/retries.
+    // Usar esta abstração para manter camadas de aplicação independentes do provedor.
+    public interface INotificationDispatcher
+    {
+        // Envia uma mensagem informativa relacionada a um "Ticket" para as partes interessadas.
+        Task DispatchTicketUpdateAsync(Ticket ticket, string message, CancellationToken cancellationToken);
+    }
 }

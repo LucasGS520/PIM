@@ -1,12 +1,12 @@
-namespace SupportSystem.Application.Interfaces;
+using System.Threading;
+using System.Threading.Tasks;
 
-/// <summary>
-/// Define contrato para confirmação de operações transacionais.
-/// </summary>
-public interface IUnitOfWork
+namespace SupportSystem.Application.Interfaces
 {
-    /// <summary>
-    /// Persiste alterações pendentes no armazenamento definitivo.
-    /// </summary>
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    // Define o contrato do padrão Unit of Work responsável por confirmar operações transacionais.
+    public interface IUnitOfWork
+    {
+        // Persiste alterações pendentes no armazenamento definitivo (confirma/commita a unidade).
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    }
 }

@@ -1,22 +1,14 @@
 namespace SupportSystem.Domain.Entities;
 
-/// <summary>
-/// Representa uma entidade base com identificador e datas auditáveis.
-/// </summary>
+// Representa uma entidade base com identificador e datas auditáveis.
 public abstract class BaseEntity
 {
-    /// <summary>
-    /// Identificador único da entidade.
-    /// </summary>
+    // Identificador único da entidade.
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    /// <summary>
-    /// Data de criação do registro.
-    /// </summary>
+    // Data de criação do registro.
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    /// <summary>
-    /// Data de última atualização do registro.
-    /// </summary>
+    // Data de última atualização do registro.
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

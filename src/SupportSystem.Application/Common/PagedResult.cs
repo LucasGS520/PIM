@@ -1,40 +1,29 @@
+using System.Collections.Generic;
+
 namespace SupportSystem.Application.Common;
 
-/// <summary>
-/// Representa um resultado paginado utilizado em listagens.
-/// </summary>
-/// <typeparam name="T">Tipo de dado retornado.</typeparam>
+// Representa um resultado paginado genérico utilizado em listagens e respostas de API.
+// Classe imutável contendo os itens da página atual e metadados de paginação.
 public class PagedResult<T>
 {
-    /// <summary>
-    /// Itens retornados na página atual.
-    /// </summary>
+    // Coleção somente leitura com os itens retornados na página atual.
     public IReadOnlyCollection<T> Items { get; }
 
-    /// <summary>
-    /// Quantidade total de itens encontrados.
-    /// </summary>
+    // Quantidade total de itens disponíveis para a consulta.
     public long Total { get; }
 
-    /// <summary>
-    /// Número da página solicitada.
-    /// </summary>
+    // Número da página solicitada.
     public int Page { get; }
 
-    /// <summary>
-    /// Quantidade de itens por página aplicada.
-    /// </summary>
+    // Quantidade de itens por página aplicada na consulta.
     public int PageSize { get; }
 
-    /// <summary>
-    /// Cria um novo resultado paginado imutável.
-    /// </summary>
+    // Cria um novo resultado de paginação não modificado com itens.
     public PagedResult(IReadOnlyCollection<T> items, long total, int page, int pageSize)
     {
-        // Mantemos as propriedades imutáveis para simplificar o uso em cache e respostas idempotentes.
-        Items = items;
-        Total = total;
-        Page = page;
-        PageSize = pageSize;
+        Items = items; // Itens retornados na página atual
+        Total = total; // Total de itens correspondentes à consulta
+        Page = page; // Número da página
+        PageSize = pageSize; // Quantidade de itens por página
     }
 }

@@ -1,32 +1,20 @@
 namespace SupportSystem.Domain.Entities;
 
-/// <summary>
-/// Armazena metadados de um anexo associado ao chamado.
-/// </summary>
+// Armazena metadados de um anexo associado ao chamado.
 public class TicketAttachment : BaseEntity
 {
-    /// <summary>
-    /// Identificador do chamado ao qual o anexo pertence.
-    /// </summary>
+    // Identificador do chamado ao qual o anexo pertence.
     public Guid TicketId { get; set; }
 
-    /// <summary>
-    /// Entidade navegacional para o chamado.
-    /// </summary>
+    // Entidade navegacional para o chamado.
     public Ticket? Ticket { get; set; }
 
-    /// <summary>
-    /// Nome amigável do arquivo anexado.
-    /// </summary>
+    // Nome amigável do arquivo anexado.
     public string FileName { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Localização do arquivo no armazenamento configurado.
-    /// </summary>
+    // Localização do arquivo no armazenamento configurado.
     public string FilePath { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Tipo de conteúdo do arquivo para validação.
-    /// </summary>
+    // Tipo de conteúdo do arquivo para validação.
     public string ContentType { get; set; } = string.Empty;
 }

@@ -3,38 +3,26 @@ using SupportSystem.Application.DTOs;
 
 namespace SupportSystem.Application.Interfaces;
 
-/// <summary>
-/// Define operações para gerenciamento da base de conhecimento.
-/// </summary>
+// Operações para gerenciamento da base de conhecimento (artigos).
+// Inclui listagem paginada, CRUD e sugestões baseadas em texto.
+// Os métodos suportam  cancelamento de operações assíncronas.
 public interface IKnowledgeBaseService
 {
-    /// <summary>
-    /// Retorna uma listagem paginada de artigos.
-    /// </summary>
+    // Retorna uma listagem paginada de artigos.
     Task<PagedResult<KnowledgeBaseArticleDto>> GetAsync(int page, int pageSize, string? category, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Obtém um artigo específico.
-    /// </summary>
+    // Obtém um artigo específico.
     Task<KnowledgeBaseArticleDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Cria um novo artigo.
-    /// </summary>
+    // Cria um novo artigo.
     Task<KnowledgeBaseArticleDto> CreateAsync(CreateKnowledgeBaseArticleDto dto, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Atualiza um artigo existente.
-    /// </summary>
+    // Atualiza um artigo existente.
     Task<KnowledgeBaseArticleDto?> UpdateAsync(Guid id, UpdateKnowledgeBaseArticleDto dto, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Remove um artigo da base.
-    /// </summary>
+    // Remove um artigo da base.
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Obtém sugestões de artigos relevantes com base no texto informado.
-    /// </summary>
+    // Obtém sugestões de artigos relevantes com base no texto informado.
     Task<IReadOnlyCollection<KnowledgeBaseArticleDto>> SuggestAsync(string text, int limit, CancellationToken cancellationToken);
 }

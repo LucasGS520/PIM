@@ -1,8 +1,6 @@
 namespace SupportSystem.Domain.Enums;
 
-/// <summary>
-/// Define os níveis de prioridade atribuíveis a um chamado.
-/// </summary>
+// Define os níveis de prioridade atribuíveis a um chamado.
 public enum TicketPriority
 {
     Baixa = 0,

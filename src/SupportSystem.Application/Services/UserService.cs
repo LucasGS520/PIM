@@ -6,47 +6,54 @@ using SupportSystem.Domain.Entities;
 
 namespace SupportSystem.Application.Services;
 
-/// <summary>
-/// Implementa regras de negócio para o gerenciamento de usuários.
-/// </summary>
+// Implementa regras de negócio para o gerenciamento de usuários.
+// Contém operações básicas: listagem paginada, consulta por id, criação, atualização e exclusão.
 public class UserService : IUserService
 {
+    // Repositório genérico para acesso aos dados de User.
     private readonly IRepository<User> _repository;
+
+    // Unidade de trabalho para persistir mudanças de forma transacional.
     private readonly IUnitOfWork _unitOfWork;
 
-    /// <summary>
-    /// Inicializa a instância com dependências de persistência.
-    /// </summary>
+    // Inicializa a instância com dependências de persistência.
+    // Recebe o repositório e a unidade de trabalho via injeção de dependência.
     public UserService(IRepository<User> repository, IUnitOfWork unitOfWork)
     {
         _repository = repository;
         _unitOfWork = unitOfWork;
     }
 
-    /// <inheritdoc />
+    // Retorna uma página de usuários com total para paginação.
     public async Task<PagedResult<UserDto>> GetAsync(int page, int pageSize, CancellationToken cancellationToken)
     {
-        // Utilizamos AsNoTracking para evitar custos desnecessários na consulta de listagem.
+        // Obtém a base de consulta sem rastreamento de alterações.
         var query = _repository.Query().AsNoTracking();
+
+        // Conta total de registros para cálculo de paginação.
         var total = await query.LongCountAsync(cancellationToken);
+
+        // Aplica ordenação, paginação e executa a consulta.
         var users = await query
             .OrderBy(u => u.FullName)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
+        // Mapeia entidades para DTOs e retorna resultado paginado.
         var dtos = users.Select(MapToDto).ToList();
         return new PagedResult<UserDto>(dtos, total, page, pageSize);
     }
 
-    /// <inheritdoc />
+    // Retorna um usuário pelo identificador ou null se não existir.
     public async Task<UserDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var entity = await _repository.Query().AsNoTracking().FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
         return entity is null ? null : MapToDto(entity);
     }
 
-    /// <inheritdoc />
+    // Cria um novo usuário a partir do DTO de criação.
+    // Faz hash da senha antes de persistir.
     public async Task<UserDto> CreateAsync(CreateUserDto dto, CancellationToken cancellationToken)
     {
         var entity = new User
@@ -59,12 +66,14 @@ public class UserService : IUserService
             Role = dto.Perfil
         };
 
+        // Adiciona a entidade e salva as alterações via UnitOfWork.
         await _repository.AddAsync(entity, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return MapToDto(entity);
     }
 
-    /// <inheritdoc />
+    // Atualiza campos editáveis de um usuário existente.
+    // Retorna null se o usuário não existir.
     public async Task<UserDto?> UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken)
     {
         var entity = await _repository.GetByIdAsync(id, cancellationToken);
@@ -73,6 +82,7 @@ public class UserService : IUserService
             return null;
         }
 
+        // Atualiza apenas os campos permitidos para edição.
         entity.FullName = dto.NomeCompleto;
         entity.PhoneNumber = dto.Telefone;
         entity.Department = dto.Departamento;
@@ -84,7 +94,8 @@ public class UserService : IUserService
         return MapToDto(entity);
     }
 
-    /// <inheritdoc />
+
+    // Remove um usuário pelo id. Retorna true se removido, false se não encontrado.
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var entity = await _repository.GetByIdAsync(id, cancellationToken);
@@ -98,6 +109,7 @@ public class UserService : IUserService
         return true;
     }
 
+    // Mapeia entidade User para DTO de saída.
     private static UserDto MapToDto(User entity) => new(
         entity.Id,
         entity.FullName,
@@ -107,6 +119,8 @@ public class UserService : IUserService
         entity.Role
     );
 
+    // Gera hash da senha usando SHA256.
+    // Observação: SHA256 é usado aqui apenas para demonstração; em produção prefira algoritmos específicos para senhas (ex: BCrypt, Argon2) com salt.
     private static string HashPassword(string password)
     {
         // Optamos por SHA256 para manter a demonstração independente de pacotes externos.

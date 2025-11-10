@@ -1,8 +1,6 @@
 namespace SupportSystem.Domain.Enums;
 
-/// <summary>
-/// Representa os estados possíveis de um chamado.
-/// </summary>
+// Representa os estados possíveis de um chamado.
 public enum TicketStatus
 {
     Aberto = 0,

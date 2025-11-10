@@ -1,12 +1,14 @@
-namespace SupportSystem.Application.AI;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
-/// <summary>
-/// Define a interface para clientes de IA responsáveis por classificar chamados.
-/// </summary>
-public interface IAssistantClient
+namespace SupportSystem.Application.AI
 {
-    /// <summary>
-    /// Analisa o texto informado e retorna categoria, prioridade e artigos sugeridos.
-    /// </summary>
-    Task<AssistantResult> AnalyzeTicketAsync(string title, string description, IEnumerable<string>? keywords, CancellationToken cancellationToken);
+    // Interface para clientes de IA responsáveis por classificar chamados.
+    // Implementações devem analisar título e descrição do chamado e retornar informações como categoria, prioridade e artigos sugeridos.
+    public interface IAssistantClient
+    {
+        // Analisa o texto informado e retorna categoria, prioridade e artigos sugeridos.
+        Task<AssistantResult> AnalyzeTicketAsync(string title, string description, IEnumerable<string>? keywords, CancellationToken cancellationToken);
+    }
 }

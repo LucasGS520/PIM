@@ -2,53 +2,33 @@ using SupportSystem.Domain.Enums;
 
 namespace SupportSystem.Domain.Entities;
 
-/// <summary>
-/// Representa um usuário da plataforma com suas credenciais e permissões.
-/// </summary>
+// Representa um usuário da plataforma com suas credenciais e permissões.
 public class User : BaseEntity
 {
-    /// <summary>
-    /// Nome completo do usuário para identificação no atendimento.
-    /// </summary>
+    // Nome completo do usuário para identificação no atendimento.
     public string FullName { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Endereço de e-mail utilizado para comunicação e login.
-    /// </summary>
+    // Endereço de e-mail utilizado para comunicação e login.
     public string Email { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Hash da senha para autenticação segura.
-    /// </summary>
+    // Hash da senha para autenticação segura.
     public string PasswordHash { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Telefone de contato opcional do usuário.
-    /// </summary>
+    // Telefone de contato opcional do usuário.
     public string? PhoneNumber { get; set; }
 
-    /// <summary>
-    /// Cargo ou setor relacionado ao usuário técnico.
-    /// </summary>
+    // Cargo ou setor relacionado ao usuário técnico.
     public string? Department { get; set; }
 
-    /// <summary>
-    /// Perfil de acesso configurado para controlar permissões.
-    /// </summary>
+    // Perfil de acesso configurado para controlar permissões.
     public UserRole Role { get; set; }
 
-    /// <summary>
-    /// Chamados abertos pelo usuário cliente.
-    /// </summary>
+    // Chamados abertos pelo usuário cliente.
     public ICollection<Ticket> RequestedTickets { get; set; } = new List<Ticket>();
 
-    /// <summary>
-    /// Chamados atribuídos ao usuário técnico.
-    /// </summary>
+    // Chamados atribuídos ao usuário técnico.
     public ICollection<Ticket> AssignedTickets { get; set; } = new List<Ticket>();
 
-    /// <summary>
-    /// Avaliações realizadas pelo usuário após o atendimento.
-    /// </summary>
+    // Avaliações realizadas pelo usuário após o atendimento.
     public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 }

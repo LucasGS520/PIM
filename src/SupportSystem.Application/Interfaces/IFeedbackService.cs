@@ -1,19 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using SupportSystem.Application.DTOs;
 
-namespace SupportSystem.Application.Interfaces;
-
-/// <summary>
-/// Define operações relacionadas às avaliações dos atendimentos.
-/// </summary>
-public interface IFeedbackService
+namespace SupportSystem.Application.Interfaces
 {
-    /// <summary>
-    /// Registra uma avaliação de atendimento realizada pelo cliente.
-    /// </summary>
-    Task<FeedbackDto> CreateAsync(CreateFeedbackDto dto, CancellationToken cancellationToken);
+    // Interface para operações relacionadas às avaliações (feedback) dos atendimentos.
+    // Responsável por criar avaliações e recuperar avaliações associadas a chamados.
+    // Implementações devem tratar validação, persistência e mapeamento para FeedbackDto.
+    public interface IFeedbackService
+    {
+        // Registra uma avaliação de atendimento realizada pelo cliente.
+        Task<FeedbackDto> CreateAsync(CreateFeedbackDto dto, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Obtém os feedbacks associados a um chamado.
-    /// </summary>
-    Task<IReadOnlyCollection<FeedbackDto>> GetByTicketAsync(Guid ticketId, CancellationToken cancellationToken);
+
+        // Obtém os feedbacks associados a um chamado.
+        Task<IReadOnlyCollection<FeedbackDto>> GetByTicketAsync(Guid ticketId, CancellationToken cancellationToken);
+    }
 }

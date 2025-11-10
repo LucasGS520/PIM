@@ -4,38 +4,25 @@ using SupportSystem.Domain.Enums;
 
 namespace SupportSystem.Application.Interfaces;
 
-/// <summary>
-/// Define operações para gestão de chamados e fluxo de atendimento.
-/// </summary>
+// Serviço para operações relacionadas a chamados (tickets) e fluxo de atendimento.
+// Contém métodos para consulta paginada, criação, atualização, reabertura e leitura do histórico.
 public interface ITicketService
 {
-    /// <summary>
-    /// Retorna lista paginada de chamados considerando filtros básicos.
-    /// </summary>
+    // Retorna uma lista paginada de chamados aplicando filtros básicos.
     Task<PagedResult<TicketDto>> GetAsync(int page, int pageSize, TicketStatus? status, Guid? requesterId, Guid? assigneeId, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Obtém detalhes de um chamado específico.
-    /// </summary>
+    // Obtém os detalhes de um chamado específico pelo seu identificador.
     Task<TicketDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Abre um chamado utilizando classificação assistida por IA.
-    /// </summary>
+    // Cria um novo chamado. A classificação (categoria/prioridade) pode ser assistida por IA.
     Task<TicketDto> CreateAsync(CreateTicketDto dto, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Atualiza os dados de um chamado e registra o histórico correspondente.
-    /// </summary>
+    // Atualiza os dados de um chamado e registra entrada no histórico (comentários, alterações de status, etc.)
     Task<TicketDto?> UpdateAsync(Guid id, UpdateTicketDto dto, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Reabre um chamado respeitando as regras de prazo configuradas.
-    /// </summary>
+    // Reabre um chamado fechado respeitando regras e prazos configurados no sistema.
     Task<TicketDto?> ReopenAsync(Guid id, Guid requesterId, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Retorna o histórico completo de interações de um chamado.
-    /// </summary>
+    // Retorna o histórico completo de interações e eventos relacionados a um chamado.
     Task<IReadOnlyCollection<TicketHistoryDto>> GetHistoryAsync(Guid id, CancellationToken cancellationToken);
 }

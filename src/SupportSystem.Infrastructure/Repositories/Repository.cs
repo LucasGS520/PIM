@@ -5,41 +5,47 @@ using SupportSystem.Infrastructure.Data;
 
 namespace SupportSystem.Infrastructure.Repositories;
 
-/// <summary>
-/// Implementação genérica de repositório baseada no Entity Framework Core.
-/// </summary>
-/// <typeparam name="TEntity">Tipo da entidade manipulada.</typeparam>
+
+// Implementação genérica de repositório baseada no Entity Framework Core.
+// Fornece operações CRUD básicas reutilizáveis para entidades que herdam de BaseEntity.
 public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
 {
+    // Contexto do EF Core compartilhado entre repositórios.
     private readonly SupportSystemDbContext _context;
+
+    // DbSet específico para o tipo TEntity, usado para consultas e operações.
     private readonly DbSet<TEntity> _set;
 
-    /// <summary>
-    /// Inicializa a instância com o contexto compartilhado.
-    /// </summary>
+    // Inicializa a instância com o contexto compartilhado.
+    // O DbSet é obtido a partir do contexto para evitar repetição de código.
     public Repository(SupportSystemDbContext context)
     {
         _context = context;
         _set = context.Set<TEntity>();
     }
 
-    /// <inheritdoc />
+    // Retorna um IQueryable para permitir consultas LINQ sobre a entidade.
     public IQueryable<TEntity> Query() => _set;
 
-    /// <inheritdoc />
-    public Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken) => _set.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+    // Recupera uma entidade pelo seu identificador de forma assíncrona.
+    // Retorna null se a entidade não for encontrada.
+    public Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken) =>
+        _set.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
-    /// <inheritdoc />
-    public Task AddAsync(TEntity entity, CancellationToken cancellationToken) => _set.AddAsync(entity, cancellationToken).AsTask();
+    // Adiciona uma nova entidade ao contexto de forma assíncrona.
+    // A persistência no banco ocorrerá quando SaveChanges/SaveChangesAsync for chamado no contexto.
+    public Task AddAsync(TEntity entity, CancellationToken cancellationToken) =>
+        _set.AddAsync(entity, cancellationToken).AsTask();
 
-    /// <inheritdoc />
+    // Marca a entidade como modificada para que as alterações sejam persistidas no próximo SaveChanges.
+    // Usamos o rastreamento do contexto para controlar as modificações.
     public void Update(TEntity entity)
     {
-        // Utilizamos o rastreamento do contexto para controlar as modificações.
         _set.Update(entity);
     }
 
-    /// <inheritdoc />
+    // Remove a entidade do contexto. 
+    // A exclusão efetiva ocorre no próximo SaveChanges.
     public void Remove(TEntity entity)
     {
         _set.Remove(entity);

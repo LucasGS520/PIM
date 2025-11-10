@@ -2,34 +2,21 @@ using SupportSystem.Domain.Entities;
 
 namespace SupportSystem.Application.Interfaces;
 
-/// <summary>
-/// Contrato genérico para operações básicas de persistência.
-/// </summary>
-/// <typeparam name="TEntity">Entidade do domínio manipulado.</typeparam>
+// Interface genérica de repositório para operações básicas de persistência (CRUD).
 public interface IRepository<TEntity> where TEntity : BaseEntity
 {
-    /// <summary>
-    /// Retorna uma consulta rastreável sobre a entidade.
-    /// </summary>
+    // Retorna uma consulta rastreável (IQueryable) sobre a entidade.
     IQueryable<TEntity> Query();
 
-    /// <summary>
-    /// Obtém uma entidade pelo identificador único.
-    /// </summary>
+    // Obtém uma entidade pelo identificador único.
     Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Adiciona uma nova entidade ao contexto.
-    /// </summary>
+    // Adiciona uma nova entidade ao contexto/armazenamento de forma assíncrona.
     Task AddAsync(TEntity entity, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Atualiza uma entidade existente no contexto.
-    /// </summary>
+    // Atualiza uma entidade existente no contexto.
     void Update(TEntity entity);
 
-    /// <summary>
-    /// Remove uma entidade do contexto.
-    /// </summary>
+    // Remove uma entidade do contexto/armazenamento.
     void Remove(TEntity entity);
 }

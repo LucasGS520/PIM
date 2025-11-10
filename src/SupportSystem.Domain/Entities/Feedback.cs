@@ -1,37 +1,23 @@
 namespace SupportSystem.Domain.Entities;
 
-/// <summary>
-/// Armazena a avaliação de atendimento submetida pelo cliente.
-/// </summary>
+// Armazena a avaliação de atendimento submetida pelo cliente.
 public class Feedback : BaseEntity
 {
-    /// <summary>
-    /// Identificador do chamado avaliado.
-    /// </summary>
+    // Identificador do chamado avaliado.
     public Guid TicketId { get; set; }
 
-    /// <summary>
-    /// Entidade navegacional do chamado avaliado.
-    /// </summary>
+    // Entidade navegacional do chamado avaliado.
     public Ticket? Ticket { get; set; }
 
-    /// <summary>
-    /// Identificador do usuário que enviou o feedback.
-    /// </summary>
+    // Identificador do usuário que enviou o feedback.
     public Guid UserId { get; set; }
 
-    /// <summary>
-    /// Entidade navegacional do usuário avaliador.
-    /// </summary>
+    // Entidade navegacional do usuário avaliador.
     public User? User { get; set; }
 
-    /// <summary>
-    /// Nota atribuída pelo cliente ao atendimento.
-    /// </summary>
+    // Nota atribuída pelo cliente ao atendimento.
     public int Score { get; set; }
 
-    /// <summary>
-    /// Comentário opcional com observações do cliente.
-    /// </summary>
+    // Comentário opcional com observações do cliente.
     public string? Comment { get; set; }
 }

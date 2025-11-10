@@ -1,37 +1,24 @@
 namespace SupportSystem.Domain.Entities;
 
-/// <summary>
-/// Registra as interações e alterações relevantes de um chamado.
-/// </summary>
+// Registra as interações e alterações relevantes de um chamado.
 public class TicketHistory : BaseEntity
 {
-    /// <summary>
-    /// Identificador do chamado relacionado.
-    /// </summary>
+    // Identificador do chamado relacionado.
     public Guid TicketId { get; set; }
 
-    /// <summary>
-    /// Entidade navegacional para o chamado.
-    /// </summary>
+    // Entidade navegacional para o chamado.
     public Ticket? Ticket { get; set; }
 
-    /// <summary>
-    /// Identificador do autor da atualização.
-    /// </summary>
+
+    // Identificador do autor da atualização.
     public Guid AuthorId { get; set; }
 
-    /// <summary>
-    /// Entidade navegacional para o autor.
-    /// </summary>
+    // Entidade navegacional para o autor.
     public User? Author { get; set; }
 
-    /// <summary>
-    /// Conteúdo textual da interação registrada.
-    /// </summary>
+    // Conteúdo textual da interação registrada.
     public string Message { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Status do chamado após a interação.
-    /// </summary>
+    // Status do chamado após a interação.
     public string StatusSnapshot { get; set; } = string.Empty;
 }

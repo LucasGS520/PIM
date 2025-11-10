@@ -2,43 +2,28 @@ using SupportSystem.Domain.Enums;
 
 namespace SupportSystem.Domain.Entities;
 
-/// <summary>
-/// Representa uma notificação enviada para usuários do sistema.
-/// </summary>
+// Representa uma notificação enviada para usuários do sistema.
 public class Notification : BaseEntity
 {
-    /// <summary>
-    /// Identificador do usuário destinatário.
-    /// </summary>
+    // Identificador do usuário destinatário.
     public Guid UserId { get; set; }
 
-    /// <summary>
-    /// Entidade navegacional do usuário destinatário.
-    /// </summary>
+    // Entidade navegacional do usuário destinatário.
     public User? User { get; set; }
 
-    /// <summary>
-    /// Conteúdo textual da mensagem entregue.
-    /// </summary>
+    // Conteúdo textual da mensagem entregue.
     public string Message { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Tipo de notificação utilizada na entrega.
-    /// </summary>
+    // Tipo de notificação utilizada na entrega.
     public NotificationType Type { get; set; }
 
-    /// <summary>
-    /// Indicador se a notificação foi lida pelo usuário.
-    /// </summary>
+    // Indicador se a notificação foi lida pelo usuário.
     public bool IsRead { get; set; }
 
-    /// <summary>
-    /// Identificador opcional do chamado relacionado.
-    /// </summary>
+
+    // Identificador opcional do chamado relacionado.
     public Guid? TicketId { get; set; }
 
-    /// <summary>
-    /// Entidade navegacional do chamado associado.
-    /// </summary>
+    // Entidade navegacional do chamado associado.
     public Ticket? Ticket { get; set; }
 }
