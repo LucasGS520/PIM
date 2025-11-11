@@ -8,20 +8,20 @@ namespace SupportSystem.Api.Controllers;
 // Fornece endpoints para listar, obter, criar, atualizar e excluir usuários.
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController : ControllerBase
+public class UsuariosController : ControllerBase
 {
     // Serviço de aplicação para operações relacionadas a usuários (injeção via DI).
     private readonly IUserService _service;
 
     // Construtor que injeta o serviço de usuários.
-    public UsersController(IUserService service)
+    public UsuariosController(IUserService service)
     {
         _service = service;
     }
 
     // Lista usuários de forma paginada para facilitar a administração.
     [HttpGet]
-    public async Task<ActionResult> GetAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 20, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> ObterAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 20, CancellationToken cancellationToken = default)
     {
         // Chama o serviço de aplicação para obter os usuários paginados.
         var result = await _service.GetAsync(page, pageSize, cancellationToken);
@@ -32,7 +32,7 @@ public class UsersController : ControllerBase
 
     // Obtém um usuário específico pelo identificador informado.
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult> ObterPorIdAsync(Guid id, CancellationToken cancellationToken)
     {
         // Recupera o usuário pelo id.
         var result = await _service.GetByIdAsync(id, cancellationToken);
@@ -49,18 +49,18 @@ public class UsersController : ControllerBase
 
     // Cria um novo usuário com base nos dados fornecidos.
     [HttpPost]
-    public async Task<ActionResult> CreateAsync([FromBody] CreateUserDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> CriarAsync([FromBody] CreateUserDto dto, CancellationToken cancellationToken)
     {
         // Chama o serviço que realiza a criação do usuário.
         var created = await _service.CreateAsync(dto, cancellationToken);
 
         // Retorna 201 e inclui a rota para obter o recurso recém-criado.
-        return CreatedAtAction(nameof(GetByIdAsync), new { id = created.Id }, created);
+        return CreatedAtAction(nameof(ObterPorIdAsync), new { id = created.Id }, created);
     }
 
     // Atualiza os dados de um usuário existente.
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult> UpdateAsync(Guid id, [FromBody] UpdateUserDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> AtualizarAsync(Guid id, [FromBody] UpdateUserDto dto, CancellationToken cancellationToken)
     {
         // Executa a atualização via camada de aplicação.
         var updated = await _service.UpdateAsync(id, dto, cancellationToken);
@@ -77,7 +77,7 @@ public class UsersController : ControllerBase
 
     // Exclui definitivamente um usuário registrado.
     [HttpDelete("{id:guid}")]
-    public async Task<ActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult> DeletarAsync(Guid id, CancellationToken cancellationToken)
     {
         // Solicita exclusão ao serviço de aplicação.
         var deleted = await _service.DeleteAsync(id, cancellationToken);

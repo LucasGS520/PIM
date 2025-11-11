@@ -34,7 +34,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Cliente do assistente (AI). Aqui está configurado para usar uma implementação
-        services.AddScoped<IAssistantClient, RuleBasedAssistantClient>();
+        services.AddScoped<IAClienteAssistente, ClienteAssistenteBaseadoEmRegras>();
 
         // Registramos serviços da camada de aplicação para serem consumidos pelos controladores.
         // Cada serviço encapsula regras de negócio e orquestra operações entre repositórios e infraestrutura.

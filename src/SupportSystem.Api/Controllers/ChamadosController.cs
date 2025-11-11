@@ -9,7 +9,7 @@ namespace SupportSystem.Api.Controllers;
 // Fornece endpoints para criar, atualizar, recuperar, reabrir e obter histórico.
 [ApiController]
 [Route("api/[controller]")]
-public class TicketsController : ControllerBase
+public class ChamadosController : ControllerBase
 {
     // Serviço que encapsula a lógica de domínio dos chamados (CRUD, filtros, histórico).
     private readonly ITicketService _ticketService;
@@ -18,7 +18,7 @@ public class TicketsController : ControllerBase
     private readonly IKnowledgeBaseService _knowledgeBaseService;
 
     // Construtor com injeção dos serviços necessários.
-    public TicketsController(ITicketService ticketService, IKnowledgeBaseService knowledgeBaseService)
+    public ChamadosController(ITicketService ticketService, IKnowledgeBaseService knowledgeBaseService)
     {
         _ticketService = ticketService;
         _knowledgeBaseService = knowledgeBaseService;
@@ -41,7 +41,7 @@ public class TicketsController : ControllerBase
 
     // Obtém detalhes de um chamado específico por Id.
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult> ObterPorIdAsync(Guid id, CancellationToken cancellationToken)
     {
         // Busca o chamado. Retorna 404 se não encontrado.
         var ticket = await _ticketService.GetByIdAsync(id, cancellationToken);
@@ -55,7 +55,7 @@ public class TicketsController : ControllerBase
 
     // Cria um novo chamado e retorna sugestões da base de conhecimento relacionadas à descrição.
     [HttpPost]
-    public async Task<ActionResult> CreateAsync([FromBody] CreateTicketDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> CriarAsync([FromBody] CreateTicketDto dto, CancellationToken cancellationToken)
     {
         // Cria o chamado via serviço de domínio.
         var ticket = await _ticketService.CreateAsync(dto, cancellationToken);
@@ -65,12 +65,12 @@ public class TicketsController : ControllerBase
         var suggestions = await _knowledgeBaseService.SuggestAsync(dto.Descricao, 3, cancellationToken);
 
         // Retorna 201 com local do recurso e payload contendo o chamado e as sugestões.
-        return CreatedAtAction(nameof(GetByIdAsync), new { id = ticket.Id }, new { ticket, suggestions });
+        return CreatedAtAction(nameof(ObterPorIdAsync), new { id = ticket.Id }, new { ticket, suggestions });
     }
 
     // Atualiza informações do chamado e registra histórico de alterações.
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult> UpdateAsync(Guid id, [FromBody] UpdateTicketDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> AtualizarAsync(Guid id, [FromBody] UpdateTicketDto dto, CancellationToken cancellationToken)
     {
         // Atualiza via serviço; serviço retorna null se o recurso não existir.
         var updated = await _ticketService.UpdateAsync(id, dto, cancellationToken);
@@ -83,8 +83,8 @@ public class TicketsController : ControllerBase
     }
 
     // Reabre um chamado dentro do prazo permitido pelo sistema.
-    [HttpPost("{id:guid}/reopen")]
-    public async Task<ActionResult> ReopenAsync(Guid id, [FromQuery] Guid requesterId, CancellationToken cancellationToken)
+    [HttpPost("{id:guid}/reabrir")]
+    public async Task<ActionResult> ReabrirAsync(Guid id, [FromQuery] Guid requesterId, CancellationToken cancellationToken)
     {
         // Lógica de reabertura delegada ao serviço de tickets (valida prazo, autorizações, etc.).
         var reopened = await _ticketService.ReopenAsync(id, requesterId, cancellationToken);
@@ -97,8 +97,8 @@ public class TicketsController : ControllerBase
     }
 
     // Recupera o histórico de interações e alterações de um chamado.
-    [HttpGet("{id:guid}/history")]
-    public async Task<ActionResult> GetHistoryAsync(Guid id, CancellationToken cancellationToken)
+    [HttpGet("{id:guid}/historico")]
+    public async Task<ActionResult> ObterHistoricoAsync(Guid id, CancellationToken cancellationToken)
     {
         // Retorna histórico (eventos, comentários, mudanças de status) fornecido pelo serviço.
         var history = await _ticketService.GetHistoryAsync(id, cancellationToken);

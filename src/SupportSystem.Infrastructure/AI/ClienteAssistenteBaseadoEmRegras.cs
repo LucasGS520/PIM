@@ -7,33 +7,33 @@ namespace SupportSystem.Infrastructure.AI;
 
 // Implementação simplificada do módulo de IA com regras heurísticas.
 // Este cliente usa regras locais e pesquisa em base de conhecimento para sugerir categoria, prioridade e artigos relacionados a um chamado.
-public class RuleBasedAssistantClient : IAssistantClient
+public class ClienteAssistenteBaseadoEmRegras : IAClienteAssistente
 {
     // Repositório de artigos da base de conhecimento (acesso a dados).
     private readonly IRepository<KnowledgeBaseArticle> _articles;
 
     // Inicializa o cliente com acesso aos artigos para sugerir soluções.
-    public RuleBasedAssistantClient(IRepository<KnowledgeBaseArticle> articles)
+    public ClienteAssistenteBaseadoEmRegras(IRepository<KnowledgeBaseArticle> articles)
     {
         _articles = articles; // Repositório para consultar artigos publicados
     }
 
     // Analisa título/descrição/chaves do chamado e retorna sugestão baseada em regras.
-    public async Task<AssistantResult> AnalyzeTicketAsync(string title, string description, IEnumerable<string>? keywords, CancellationToken cancellationToken)
+    public async Task<ResultadoAssistente> AnalisarChamadoAsync(string titulo, string descricao, IEnumerable<string>? palavrasChave, CancellationToken cancellationToken)
     {
         // Monta o texto que será avaliado pelas regras (título + descrição + palavras-chave).
-        var text = $"{title} {description} {string.Join(' ', keywords ?? Array.Empty<string>())}".ToLowerInvariant();
+        var texto = $"{titulo} {descricao} {string.Join(' ', palavrasChave ?? Array.Empty<string>())}".ToLowerInvariant();
 
         // Determina categoria com regras simples de palavras-chave.
-        var category = Categorize(text);
+        var categoria = Categorize(texto);
 
         // Determina prioridade com regras simples de palavras-chave.
-        var priority = InferPriority(text);
+        var prioridade = InferPriority(texto);
 
         // Busca artigos relacionados na base de conhecimento.
-        var relatedArticles = await SuggestArticlesAsync(text, cancellationToken);
+        var artigosRelacionados = await SugerirArtigosAsync(texto, cancellationToken);
 
-        return new AssistantResult(category, priority, relatedArticles);
+        return new ResultadoAssistente(categoria, prioridade, artigosRelacionados);
     }
 
     // Categoriza o texto em áreas comuns (Rede, Acessos, Hardware, Software, Outros).
@@ -90,17 +90,17 @@ public class RuleBasedAssistantClient : IAssistantClient
     }
 
     // Sugere até 3 artigos publicados relacionados ao texto de entrada.
-    private async Task<IReadOnlyCollection<Guid>> SuggestArticlesAsync(string text, CancellationToken cancellationToken)
+    private async Task<IReadOnlyCollection<Guid>> SugerirArtigosAsync(string text, CancellationToken cancellationToken)
     {
         // Observação: a utilização de ToLower na consulta pode impedir indexação; ajustar conforme provedor/coluna.
-        var query = _articles.Query()
+        var consulta = _articles.Query()
             .Where(a => a.IsPublished &&
                         (a.Title.ToLower().Contains(text) || a.Content.ToLower().Contains(text) || a.Keywords.ToLower().Contains(text)))
             .OrderByDescending(a => a.UpdatedAt)
             .Take(3);
 
         // Executa a query retornando apenas os IDs (eficiente para tráfego reduzido).
-        var articles = await query.Select(a => a.Id).ToListAsync(cancellationToken);
+        var articles = await consulta.Select(a => a.Id).ToListAsync(cancellationToken);
         return articles;
     }
 }

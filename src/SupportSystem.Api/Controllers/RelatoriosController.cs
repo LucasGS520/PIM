@@ -10,14 +10,14 @@ namespace SupportSystem.Api.Controllers
     // Fornece endpoints públicos para recuperação de métricas e informações do painel de gestão.
     [ApiController]
     [Route("api/[controller]")]
-    public class ReportsController : ControllerBase
+    public class RelatoriosController : ControllerBase
     {
         // Serviço de relatório injetado via DI.
         // Responsável pela lógica de obtenção das métricas e agregações.
         private readonly IReportingService _reportingService;
 
         // Construtor com injeção do serviço de relatórios.
-        public ReportsController(IReportingService reportingService)
+        public RelatoriosController(IReportingService reportingService)
         {
             _reportingService = reportingService;
         }
@@ -26,7 +26,7 @@ namespace SupportSystem.Api.Controllers
         // Recupera as métricas consolidadas para o painel gerencial.
         // Retorna um objeto com as principais estatísticas usadas no dashboard.
         [HttpGet("dashboard")]
-        public async Task<ActionResult> GetDashboardMetricsAsync([FromQuery] DateTime? referenceDate = null, CancellationToken cancellationToken = default)
+        public async Task<ActionResult> ObterMetricasDashboardAsync([FromQuery] DateTime? referenceDate = null, CancellationToken cancellationToken = default)
         {
             // Determina a data de referência: recebe a informada ou usa o UTC atual como fallback.
             var date = referenceDate ?? DateTime.UtcNow;

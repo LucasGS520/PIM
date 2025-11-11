@@ -9,7 +9,7 @@ namespace SupportSystem.Api.Controllers;
 // Fornece endpoints para criar, listar e marcar notificações como lidas.
 [ApiController]
 [Route("api/[controller]")]
-public class NotificationsController : ControllerBase
+public class NotificacoesController : ControllerBase
 {
 
     // Serviço de notificações injetado via Dependency Injection.
@@ -18,26 +18,26 @@ public class NotificationsController : ControllerBase
 
  
     // Construtor com injeção do serviço de notificações.
-    public NotificationsController(INotificationService service)
+    public NotificacoesController(INotificationService service)
     {
         _service = service;
     }
 
     // Envia manualmente uma notificação para um usuário específico.
     // Retorna 201 Created com a notificação criada e cabeçalho Location apontando para a listagem do usuário.
-    public async Task<ActionResult> SendAsync([FromBody] CreateNotificationDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> EnviarAsync([FromBody] CreateNotificationDto dto, CancellationToken cancellationToken)
     {
         // Chama o serviço para criar/enviar a notificação.
         var notification = await _service.SendAsync(dto, cancellationToken);
 
         // Retorna 201 Created apontando para o endpoint que lista notificações do usuário.
-        return CreatedAtAction(nameof(GetByUserAsync), new { userId = notification.UsuarioId }, notification);
+        return CreatedAtAction(nameof(ObterPorUsuarioAsync), new { userId = notification.UsuarioId }, notification);
     }
 
 
     // Lista notificações de um usuário.
     // Permite incluir (ou não) notificações já lidas através do parâmetro includeRead.
-    public async Task<ActionResult> GetByUserAsync(Guid userId, [FromQuery] bool includeRead = false, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> ObterPorUsuarioAsync(Guid userId, [FromQuery] bool includeRead = false, CancellationToken cancellationToken = default)
     {
         // Busca as notificações do usuário via serviço.
         var notifications = await _service.GetByUserAsync(userId, includeRead, cancellationToken);
@@ -49,7 +49,7 @@ public class NotificationsController : ControllerBase
 
     // Marca uma notificação específica como lida.
     // Retorna 204 No Content quando a operação for bem-sucedida ou 404 Not Found se a notificação não existir.
-    public async Task<ActionResult> MarkAsReadAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult> MarcarComoLidaAsync(Guid id, CancellationToken cancellationToken)
     {
         // Tenta marcar a notificação como lida via serviço.
         var updated = await _service.MarkAsReadAsync(id, cancellationToken);

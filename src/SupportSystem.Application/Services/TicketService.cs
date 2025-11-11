@@ -23,7 +23,7 @@ public class TicketService : ITicketService
     private readonly IRepository<TicketKnowledgeBaseSuggestion> _suggestions;
 
     // Cliente de assistente/IA usado para análise automática do chamado.
-    private readonly IAssistantClient _assistantClient;
+    private readonly IAClienteAssistente _clienteAssistente;
 
     // Dispatcher responsável por enviar notificações sobre atualizações de chamados.
     private readonly INotificationDispatcher _notificationDispatcher;
@@ -38,7 +38,7 @@ public class TicketService : ITicketService
         IRepository<TicketHistory> history,
         IRepository<TicketAttachment> attachments,
         IRepository<TicketKnowledgeBaseSuggestion> suggestions,
-        IAssistantClient assistantClient,
+        IAClienteAssistente clienteAssistente,
         INotificationDispatcher notificationDispatcher,
         IUnitOfWork unitOfWork)
     {
@@ -47,7 +47,7 @@ public class TicketService : ITicketService
         _history = history;
         _attachments = attachments;
         _suggestions = suggestions;
-        _assistantClient = assistantClient;
+        _clienteAssistente = clienteAssistente;
         _notificationDispatcher = notificationDispatcher;
         _unitOfWork = unitOfWork;
     }
@@ -104,9 +104,9 @@ public class TicketService : ITicketService
         }
 
         // Chama a IA/assistente para analisar título/descrição e sugerir categoria/prioridade/artigos.
-        var analysis = await _assistantClient.AnalyzeTicketAsync(dto.Titulo, dto.Descricao, dto.PalavrasChave, cancellationToken);
-        var priority = ParsePriority(analysis.PrioridadeSugerida);
-        var category = string.IsNullOrWhiteSpace(dto.Categoria) ? analysis.CategoriaSugerida : dto.Categoria!;
+        var analise = await _clienteAssistente.AnalisarChamadoAsync(dto.Titulo, dto.Descricao, dto.PalavrasChave, cancellationToken);
+        var priority = ParsePriority(analise.PrioridadeSugerida);
+        var category = string.IsNullOrWhiteSpace(dto.Categoria) ? analise.CategoriaSugerida : dto.Categoria!;
 
         // Criação da entidade Ticket com dados iniciais.
         var ticket = new Ticket
@@ -140,7 +140,7 @@ public class TicketService : ITicketService
         }
 
         // Registramos sugestões retornadas pela IA para consultas futuras (mapeamento de artigo sugerido).
-        foreach (var articleId in analysis.ArtigosRelacionados)
+        foreach (var articleId in analise.ArtigosRelacionados)
         {
             var suggestion = new TicketKnowledgeBaseSuggestion
             {
