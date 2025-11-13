@@ -13,13 +13,13 @@ namespace SupportSystem.Application.Interfaces
     public interface INotificationService
     {
         // Envia uma nova notificação manualmente.
-        Task<NotificationDto> SendAsync(CreateNotificationDto dto, CancellationToken cancellationToken);
+        Task<NotificacaoDto> SendAsync(CriarNotificacaoDto dto, CancellationToken cancellationToken);
 
         // Obtém notificações de um usuário.
         // Indica se as notificações já lidas devem ser incluídas no resultado.
         // Coleção somente leitura com as notificações encontradas. 
         // A ordem e paginação ficam a critério da implementação concreta.
-        Task<IReadOnlyCollection<NotificationDto>> GetByUserAsync(Guid userId, bool includeRead, CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<NotificacaoDto>> GetByUserAsync(Guid userId, bool includeRead, CancellationToken cancellationToken);
 
         // Marca uma notificação como lida.
         // Retorna true se a operação foi bem-sucedida (notificação encontrada e atualizada); false se não.

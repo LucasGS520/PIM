@@ -25,7 +25,7 @@ public class UserService : IUserService
     }
 
     // Retorna uma página de usuários com total para paginação.
-    public async Task<PagedResult<UserDto>> GetAsync(int page, int pageSize, CancellationToken cancellationToken)
+    public async Task<PagedResult<UsuarioDto>> GetAsync(int page, int pageSize, CancellationToken cancellationToken)
     {
         // Obtém a base de consulta sem rastreamento de alterações.
         var query = _repository.Query().AsNoTracking();
@@ -42,11 +42,11 @@ public class UserService : IUserService
 
         // Mapeia entidades para DTOs e retorna resultado paginado.
         var dtos = users.Select(MapToDto).ToList();
-        return new PagedResult<UserDto>(dtos, total, page, pageSize);
+        return new PagedResult<UsuarioDto>(dtos, total, page, pageSize);
     }
 
     // Retorna um usuário pelo identificador ou null se não existir.
-    public async Task<UserDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<UsuarioDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var entity = await _repository.Query().AsNoTracking().FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
         return entity is null ? null : MapToDto(entity);
@@ -54,7 +54,7 @@ public class UserService : IUserService
 
     // Cria um novo usuário a partir do DTO de criação.
     // Faz hash da senha antes de persistir.
-    public async Task<UserDto> CreateAsync(CreateUserDto dto, CancellationToken cancellationToken)
+    public async Task<UsuarioDto> CreateAsync(CriarUsuarioDto dto, CancellationToken cancellationToken)
     {
         var entity = new User
         {
@@ -74,7 +74,7 @@ public class UserService : IUserService
 
     // Atualiza campos editáveis de um usuário existente.
     // Retorna null se o usuário não existir.
-    public async Task<UserDto?> UpdateAsync(Guid id, UpdateUserDto dto, CancellationToken cancellationToken)
+    public async Task<UsuarioDto?> UpdateAsync(Guid id, AtualizarUsuarioDto dto, CancellationToken cancellationToken)
     {
         var entity = await _repository.GetByIdAsync(id, cancellationToken);
         if (entity is null)
@@ -110,7 +110,7 @@ public class UserService : IUserService
     }
 
     // Mapeia entidade User para DTO de saída.
-    private static UserDto MapToDto(User entity) => new(
+    private static UsuarioDto MapToDto(User entity) => new(
         entity.Id,
         entity.FullName,
         entity.Email,

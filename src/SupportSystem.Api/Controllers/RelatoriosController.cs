@@ -32,10 +32,10 @@ namespace SupportSystem.Api.Controllers
             var date = referenceDate ?? DateTime.UtcNow;
 
             // Chama o serviço de relatório para recuperar as métricas consolidadas.
-            var metrics = await _reportingService.GetDashboardMetricsAsync(date, cancellationToken);
+            var metricas = await _reportingService.GetDashboardMetricsAsync(date, cancellationToken);
 
             // Retorna 200 OK com o payload de métricas.
-            return Ok(metrics);
+            return Ok(metricas);
         }
     }
 }

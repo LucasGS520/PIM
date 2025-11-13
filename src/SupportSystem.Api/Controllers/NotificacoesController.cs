@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using SupportSystem.Application.DTOs;
 using SupportSystem.Application.Interfaces;
@@ -25,13 +26,13 @@ public class NotificacoesController : ControllerBase
 
     // Envia manualmente uma notificação para um usuário específico.
     // Retorna 201 Created com a notificação criada e cabeçalho Location apontando para a listagem do usuário.
-    public async Task<ActionResult> EnviarAsync([FromBody] CreateNotificationDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> EnviarAsync([FromBody] CriarNotificacaoDto dto, CancellationToken cancellationToken)
     {
         // Chama o serviço para criar/enviar a notificação.
-        var notification = await _service.SendAsync(dto, cancellationToken);
+        var notificacao = await _service.SendAsync(dto, cancellationToken);
 
         // Retorna 201 Created apontando para o endpoint que lista notificações do usuário.
-        return CreatedAtAction(nameof(ObterPorUsuarioAsync), new { userId = notification.UsuarioId }, notification);
+        return CreatedAtAction(nameof(ObterPorUsuarioAsync), new { userId = notificacao.UsuarioId }, notificacao);
     }
 
 
@@ -40,10 +41,10 @@ public class NotificacoesController : ControllerBase
     public async Task<ActionResult> ObterPorUsuarioAsync(Guid userId, [FromQuery] bool includeRead = false, CancellationToken cancellationToken = default)
     {
         // Busca as notificações do usuário via serviço.
-        var notifications = await _service.GetByUserAsync(userId, includeRead, cancellationToken);
+        var notificacoes = await _service.GetByUserAsync(userId, includeRead, cancellationToken);
 
         // Retorna 200 OK com a lista de notificações (pode ser vazia).
-        return Ok(notifications);
+        return Ok(notificacoes);
     }
 
 
@@ -52,10 +53,10 @@ public class NotificacoesController : ControllerBase
     public async Task<ActionResult> MarcarComoLidaAsync(Guid id, CancellationToken cancellationToken)
     {
         // Tenta marcar a notificação como lida via serviço.
-        var updated = await _service.MarkAsReadAsync(id, cancellationToken);
+        var atualizado = await _service.MarkAsReadAsync(id, cancellationToken);
 
         // Se a notificação não foi encontrada/atualizada, retorna 404.
-        if (!updated)
+        if (!atualizado)
         {
             return NotFound();
         }

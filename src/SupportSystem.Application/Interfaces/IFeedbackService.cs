@@ -12,10 +12,10 @@ namespace SupportSystem.Application.Interfaces
     public interface IFeedbackService
     {
         // Registra uma avaliação de atendimento realizada pelo cliente.
-        Task<FeedbackDto> CreateAsync(CreateFeedbackDto dto, CancellationToken cancellationToken);
+        Task<AvaliacaoDto> CreateAsync(CriarAvaliacaoDto dto, CancellationToken cancellationToken);
 
 
-        // Obtém os feedbacks associados a um chamado.
-        Task<IReadOnlyCollection<FeedbackDto>> GetByTicketAsync(Guid ticketId, CancellationToken cancellationToken);
+        // Obtém as avaliações associadas a um chamado.
+        Task<IReadOnlyCollection<AvaliacaoDto>> GetByTicketAsync(Guid ticketId, CancellationToken cancellationToken);
     }
 }

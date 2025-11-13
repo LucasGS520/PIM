@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using SupportSystem.Application.DTOs;
 using SupportSystem.Application.Interfaces;
@@ -20,7 +21,7 @@ public class FeedbackService : IFeedbackService
 
     // Cria um novo feedback a partir do DTO fornecido e persiste no repositório.
     // Retorna o DTO com os dados salvo.
-    public async Task<FeedbackDto> CreateAsync(CreateFeedbackDto dto, CancellationToken cancellationToken)
+    public async Task<AvaliacaoDto> CreateAsync(CriarAvaliacaoDto dto, CancellationToken cancellationToken)
     {
         // Mapeia o DTO de entrada para a entidade de domínio.
         var feedback = new Feedback
@@ -38,15 +39,15 @@ public class FeedbackService : IFeedbackService
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Retorna um DTO representando o feedback recém-criado.
-        return new FeedbackDto(feedback.Id, feedback.TicketId, feedback.UserId, feedback.Score, feedback.Comment, feedback.CreatedAt);
+        return new AvaliacaoDto(feedback.Id, feedback.TicketId, feedback.UserId, feedback.Score, feedback.Comment, feedback.CreatedAt);
     }
 
     // Recupera todos os feedbacks associados a um chamado (ticket), ordenados por data de criação descendente.
 
-    public async Task<IReadOnlyCollection<FeedbackDto>> GetByTicketAsync(Guid ticketId, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<AvaliacaoDto>> GetByTicketAsync(Guid ticketId, CancellationToken cancellationToken)
     {
         // Consulta o repositório com AsNoTracking para melhorar performance de leitura.
-        var feedbacks = await _repository.Query() 
+        var feedbacks = await _repository.Query()
             .AsNoTracking()
             .Where(f => f.TicketId == ticketId) // Filtra pelo Id do chamado.
             .OrderByDescending(f => f.CreatedAt) // Ordena do mais recente para o mais antigo.
@@ -54,7 +55,7 @@ public class FeedbackService : IFeedbackService
 
         // Projeta as entidades para DTOs de saída e retorna como lista somente leitura.
         return feedbacks
-            .Select(f => new FeedbackDto(f.Id, f.TicketId, f.UserId, f.Score, f.Comment, f.CreatedAt))
+            .Select(f => new AvaliacaoDto(f.Id, f.TicketId, f.UserId, f.Score, f.Comment, f.CreatedAt))
             .ToList();
     }
 }

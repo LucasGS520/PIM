@@ -1,3 +1,4 @@
+using System;
 using SupportSystem.Application.Common;
 using SupportSystem.Application.DTOs;
 
@@ -9,20 +10,20 @@ namespace SupportSystem.Application.Interfaces;
 public interface IKnowledgeBaseService
 {
     // Retorna uma listagem paginada de artigos.
-    Task<PagedResult<KnowledgeBaseArticleDto>> GetAsync(int page, int pageSize, string? category, CancellationToken cancellationToken);
+    Task<PagedResult<ArtigoBaseConhecimentoDto>> GetAsync(int page, int pageSize, string? category, CancellationToken cancellationToken);
 
     // Obtém um artigo específico.
-    Task<KnowledgeBaseArticleDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<ArtigoBaseConhecimentoDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
     // Cria um novo artigo.
-    Task<KnowledgeBaseArticleDto> CreateAsync(CreateKnowledgeBaseArticleDto dto, CancellationToken cancellationToken);
+    Task<ArtigoBaseConhecimentoDto> CreateAsync(CriarArtigoBaseConhecimentoDto dto, CancellationToken cancellationToken);
 
     // Atualiza um artigo existente.
-    Task<KnowledgeBaseArticleDto?> UpdateAsync(Guid id, UpdateKnowledgeBaseArticleDto dto, CancellationToken cancellationToken);
+    Task<ArtigoBaseConhecimentoDto?> UpdateAsync(Guid id, AtualizarArtigoBaseConhecimentoDto dto, CancellationToken cancellationToken);
 
     // Remove um artigo da base.
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken);
 
     // Obtém sugestões de artigos relevantes com base no texto informado.
-    Task<IReadOnlyCollection<KnowledgeBaseArticleDto>> SuggestAsync(string text, int limit, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<ArtigoBaseConhecimentoDto>> SuggestAsync(string text, int limit, CancellationToken cancellationToken);
 }

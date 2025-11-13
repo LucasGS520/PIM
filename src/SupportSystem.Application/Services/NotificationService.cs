@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using SupportSystem.Application.DTOs;
 using SupportSystem.Application.Interfaces;
@@ -21,7 +22,7 @@ public class NotificationService : INotificationService, INotificationDispatcher
 
     // Cria e persiste uma nova notificação baseada no DTO recebido.
     // Retorna a DTO representando a notificação criada.
-    public async Task<NotificationDto> SendAsync(CreateNotificationDto dto, CancellationToken cancellationToken)
+    public async Task<NotificacaoDto> SendAsync(CriarNotificacaoDto dto, CancellationToken cancellationToken)
     {
         // Cria a entidade de notificação a partir do DTO
         var notification = new Notification
@@ -37,11 +38,11 @@ public class NotificationService : INotificationService, INotificationDispatcher
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Converte entidade para DTO de retorno
-        return new NotificationDto(notification.Id, notification.UserId, notification.Message, notification.Type, notification.IsRead, notification.CreatedAt);
+        return new NotificacaoDto(notification.Id, notification.UserId, notification.Message, notification.Type, notification.IsRead, notification.CreatedAt);
     }
 
     // Recupera notificações de um usuário.
-    public async Task<IReadOnlyCollection<NotificationDto>> GetByUserAsync(Guid userId, bool includeRead, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<NotificacaoDto>> GetByUserAsync(Guid userId, bool includeRead, CancellationToken cancellationToken)
     {
         // Query base: apenas notificações do usuário
         var query = _repository.Query()
@@ -61,7 +62,7 @@ public class NotificationService : INotificationService, INotificationDispatcher
 
         // Projeta entidades para DTOs
         return notifications
-            .Select(n => new NotificationDto(n.Id, n.UserId, n.Message, n.Type, n.IsRead, n.CreatedAt))
+            .Select(n => new NotificacaoDto(n.Id, n.UserId, n.Message, n.Type, n.IsRead, n.CreatedAt))
             .ToList();
     }
 

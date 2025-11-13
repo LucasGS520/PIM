@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using SupportSystem.Application.DTOs;
 using SupportSystem.Application.Interfaces;
@@ -24,7 +25,7 @@ public class ReportingService : IReportingService
     }
 
     // Calcula e retorna as métricas do dashboard para o mês de referência fornecido.
-    public async Task<DashboardMetricsDto> GetDashboardMetricsAsync(DateTime referenceDate, CancellationToken cancellationToken)
+    public async Task<MetricasDashboardDto> GetDashboardMetricsAsync(DateTime referenceDate, CancellationToken cancellationToken)
     {
         // Determina o intervalo do mês (início inclusive, fim exclusivo).
         var startOfMonth = new DateTime(referenceDate.Year, referenceDate.Month, 1);
@@ -77,7 +78,7 @@ public class ReportingService : IReportingService
         var reopenPercentage = totalTickets == 0 ? 0 : reopenedRate / (double)totalTickets;
 
         // Monta e retorna o DTO com todas as métricas calculadas.
-        return new DashboardMetricsDto(
+        return new MetricasDashboardDto(
             timeToResolve,
             openTickets,
             resolvedTickets.Count,

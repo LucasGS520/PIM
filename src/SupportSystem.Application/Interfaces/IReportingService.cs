@@ -12,5 +12,5 @@ public interface IReportingService
     // Calcula métricas consolidadas do período atual com base na data de referência informada.
     // Data que serve como referência para o cálculo (por exemplo: início do mês, dia atual ou período desejado).
     // Use essa data para determinar o intervalo de agregação das métricas.
-    Task<DashboardMetricsDto> GetDashboardMetricsAsync(DateTime referenceDate, CancellationToken cancellationToken);
+    Task<MetricasDashboardDto> GetDashboardMetricsAsync(DateTime referenceDate, CancellationToken cancellationToken);
 }

@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using SupportSystem.Application.DTOs;
 using SupportSystem.Application.Interfaces;
@@ -34,38 +35,38 @@ public class BaseDeConhecimento : ControllerBase
     public async Task<ActionResult> ObterPorIdAsync(Guid id, CancellationToken cancellationToken)
     {
         // Busca o artigo pelo id; se não existir, retorna 404.
-        var article = await _service.GetByIdAsync(id, cancellationToken);
-        if (article is null)
+        var artigo = await _service.GetByIdAsync(id, cancellationToken);
+        if (artigo is null)
         {
             return NotFound();
         }
 
-        return Ok(article);
+        return Ok(artigo);
     }
 
 
     // Cria um novo artigo na base.
     [HttpPost]
-    public async Task<ActionResult> CriarAsync([FromBody] CreateKnowledgeBaseArticleDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> CriarAsync([FromBody] CriarArtigoBaseConhecimentoDto dto, CancellationToken cancellationToken)
     {
         // Validação adicional pode ser aplicada no serviço ou via filtros/atributos.
-        var article = await _service.CreateAsync(dto, cancellationToken);
-        return CreatedAtAction(nameof(ObterPorIdAsync), new { id = article.Id }, article);
+        var artigo = await _service.CreateAsync(dto, cancellationToken);
+        return CreatedAtAction(nameof(ObterPorIdAsync), new { id = artigo.Id }, artigo);
     }
 
 
     // Atualiza um artigo existente.
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult> AtualizarAsync(Guid id, [FromBody] UpdateKnowledgeBaseArticleDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> AtualizarAsync(Guid id, [FromBody] AtualizarArtigoBaseConhecimentoDto dto, CancellationToken cancellationToken)
     {
         // Chama serviço para atualizar; serviço deve retornar null se não existir o artigo.
-        var article = await _service.UpdateAsync(id, dto, cancellationToken);
-        if (article is null)
+        var artigo = await _service.UpdateAsync(id, dto, cancellationToken);
+        if (artigo is null)
         {
             return NotFound();
         }
 
-        return Ok(article);
+        return Ok(artigo);
     }
 
     // Exclui um artigo da base.

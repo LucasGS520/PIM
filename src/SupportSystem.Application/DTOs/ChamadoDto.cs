@@ -1,10 +1,12 @@
+using System;
+using System.Collections.Generic;
 using SupportSystem.Domain.Enums;
 
 namespace SupportSystem.Application.DTOs;
 
 // DTO que representa um chamado com os dados relevantes para as camadas de apresentação (UI/API).
 // Este record é usado para transferir informações completas de um chamado entre a aplicação e as interfaces.
-public record TicketDto(
+public record ChamadoDto(
     // Identificador único do chamado
     Guid Id,
     // Título resumido do chamado
@@ -34,7 +36,7 @@ public record TicketDto(
 // DTO utilizado na criação de chamados.
 // Contém os dados necessários para criar um novo chamado. 
 // Alguns campos são opcionais: PalavrasChave e Anexos podem ser nulos/omissos.
-public record CreateTicketDto(
+public record CriarChamadoDto(
     // Título do chamado (obrigatório).
     string Titulo,
     // Descrição detalhada do chamado (obrigatório).
@@ -52,7 +54,7 @@ public record CreateTicketDto(
 // DTO utilizado para atualizações de chamados por técnicos.
 // Permite alterações parciais: qualquer propriedade pode ser nula indicando "sem alteração".
 // Mensagem é utilizada para registrar uma nota/observação do técnico.
-public record UpdateTicketDto(
+public record AtualizarChamadoDto(
     // Nova descrição ou null para manter a atual.
     string? Descricao,
     // Novo status do chamado ou null para manter o atual.
@@ -69,7 +71,7 @@ public record UpdateTicketDto(
 
 // Representa uma entrada do histórico do chamado.
 // Cada instância descreve uma ação/observação registrada no histórico do chamado.
-public record TicketHistoryDto(
+public record HistoricoChamadoDto(
     // Identificador único da entrada de histórico.
     Guid Id,
     // Id do autor que realizou a ação.

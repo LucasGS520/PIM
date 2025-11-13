@@ -1,10 +1,11 @@
+using System;
 using SupportSystem.Domain.Enums;
 
 namespace SupportSystem.Application.DTOs;
 
 // Conjunto de DTOs relacionados a notificações usados pela camada de aplicação.
 // Representa uma notificação comunicada a um usuário.
-public record NotificationDto(
+public record NotificacaoDto(
     Guid Id, // Identificador único da notificação
     Guid UsuarioId, // Identificador do usuário destinatário da notificação
     string Mensagem, // Conteúdo textual da notificação
@@ -16,7 +17,7 @@ public record NotificationDto(
 
 // DTO utilizado para envio manual de notificações.
 // Este DTO contém apenas os campos necessários para criar/enfileirar uma notificação a partir da camada de aplicação
-public record CreateNotificationDto(
+public record CriarNotificacaoDto(
     Guid UsuarioId, // Identificador do usuário que receberá a notificação
     string Mensagem, // Conteúdo da notificação a ser enviada
     NotificationType Tipo, // Tipo da notificação a ser criada

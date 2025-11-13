@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using SupportSystem.Application.DTOs;
 using SupportSystem.Application.Interfaces;
@@ -49,30 +50,30 @@ public class UsuariosController : ControllerBase
 
     // Cria um novo usuário com base nos dados fornecidos.
     [HttpPost]
-    public async Task<ActionResult> CriarAsync([FromBody] CreateUserDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> CriarAsync([FromBody] CriarUsuarioDto dto, CancellationToken cancellationToken)
     {
         // Chama o serviço que realiza a criação do usuário.
-        var created = await _service.CreateAsync(dto, cancellationToken);
+        var criado = await _service.CreateAsync(dto, cancellationToken);
 
         // Retorna 201 e inclui a rota para obter o recurso recém-criado.
-        return CreatedAtAction(nameof(ObterPorIdAsync), new { id = created.Id }, created);
+        return CreatedAtAction(nameof(ObterPorIdAsync), new { id = criado.Id }, criado);
     }
 
     // Atualiza os dados de um usuário existente.
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult> AtualizarAsync(Guid id, [FromBody] UpdateUserDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> AtualizarAsync(Guid id, [FromBody] AtualizarUsuarioDto dto, CancellationToken cancellationToken)
     {
         // Executa a atualização via camada de aplicação.
-        var updated = await _service.UpdateAsync(id, dto, cancellationToken);
+        var atualizado = await _service.UpdateAsync(id, dto, cancellationToken);
 
         // Se não foi possível atualizar (usuário não existe), retorna 404.
-        if (updated is null)
+        if (atualizado is null)
         {
             return NotFound();
         }
 
         // Retorna 200 com a entidade atualizada.
-        return Ok(updated);
+        return Ok(atualizado);
     }
 
     // Exclui definitivamente um usuário registrado.

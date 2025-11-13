@@ -1,8 +1,10 @@
+using System;
+
 namespace SupportSystem.Application.DTOs;
 
 // Representa o feedback emitido por um cliente após o atendimento.
 // DTO (Data Transfer Object) utilizado para transferir informações do feedback entre camadas da aplicação (ex.: camada de aplicação -> camada de apresentação).
-public record FeedbackDto(
+public record AvaliacaoDto(
     Guid Id, // Identificador único do feedback
     Guid ChamadoId, // Identificador do chamado/atendimento associado ao feedback
     Guid UsuarioId, // Identificador do usuário que enviou o feedback
@@ -15,7 +17,7 @@ public record FeedbackDto(
 // Contém os dados necessários para criar um novo feedback no sistema.
 // Este record representa os dados enviados por um cliente/usuário quando registra sua avaliação. 
 // Pode ser usado em endpoints de API ou comandos na camada de aplicação.
-public record CreateFeedbackDto(
+public record CriarAvaliacaoDto(
     Guid ChamadoId, // Identificador do chamado/atendimento avaliado
     Guid UsuarioId, // Identificador do usuário que realiza a avaliação
     int Nota, // Avaliação numérica fornecida

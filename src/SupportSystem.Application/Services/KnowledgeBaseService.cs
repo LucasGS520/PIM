@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using SupportSystem.Application.Common;
 using SupportSystem.Application.DTOs;
@@ -25,7 +26,7 @@ public class KnowledgeBaseService : IKnowledgeBaseService
 
     // Obtém artigos paginados, com opção de filtrar por categoria.
     // Retorna um PagedResult contendo itens e total para paginação.
-    public async Task<PagedResult<KnowledgeBaseArticleDto>> GetAsync(int page, int pageSize, string? category, CancellationToken cancellationToken)
+    public async Task<PagedResult<ArtigoBaseConhecimentoDto>> GetAsync(int page, int pageSize, string? category, CancellationToken cancellationToken)
     {
         // Inicia a query sem rastreamento para leitura eficiente.
         var query = _repository.Query().AsNoTracking();
@@ -48,19 +49,19 @@ public class KnowledgeBaseService : IKnowledgeBaseService
 
         // Mapeia entidades para DTOs e retorna resultado paginado.
         var dtos = items.Select(MapToDto).ToList();
-        return new PagedResult<KnowledgeBaseArticleDto>(dtos, total, page, pageSize);
+        return new PagedResult<ArtigoBaseConhecimentoDto>(dtos, total, page, pageSize);
     }
 
     // Obtém um artigo por Id. Retorna null se não encontrado.
     // Consulta sem rastreamento.
-    public async Task<KnowledgeBaseArticleDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<ArtigoBaseConhecimentoDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var article = await _repository.Query().AsNoTracking().FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
         return article is null ? null : MapToDto(article);
     }
 
     // Cria um novo artigo a partir do DTO fornecido e persiste no repositório.
-    public async Task<KnowledgeBaseArticleDto> CreateAsync(CreateKnowledgeBaseArticleDto dto, CancellationToken cancellationToken)
+    public async Task<ArtigoBaseConhecimentoDto> CreateAsync(CriarArtigoBaseConhecimentoDto dto, CancellationToken cancellationToken)
     {
         // Mapeia campos do DTO para a entidade.
         var article = new KnowledgeBaseArticle
@@ -80,7 +81,7 @@ public class KnowledgeBaseService : IKnowledgeBaseService
 
     // Atualiza um artigo existente. 
     // Retorna null se o artigo não existir.
-    public async Task<KnowledgeBaseArticleDto?> UpdateAsync(Guid id, UpdateKnowledgeBaseArticleDto dto, CancellationToken cancellationToken)
+    public async Task<ArtigoBaseConhecimentoDto?> UpdateAsync(Guid id, AtualizarArtigoBaseConhecimentoDto dto, CancellationToken cancellationToken)
     {
         // Recupera o artigo a ser atualizado.
         var article = await _repository.GetByIdAsync(id, cancellationToken);
@@ -119,7 +120,7 @@ public class KnowledgeBaseService : IKnowledgeBaseService
     }
 
     // Sugere artigos publicados que contenham o texto informado no título, conteúdo ou palavras-chave.
-    public async Task<IReadOnlyCollection<KnowledgeBaseArticleDto>> SuggestAsync(string text, int limit, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<ArtigoBaseConhecimentoDto>> SuggestAsync(string text, int limit, CancellationToken cancellationToken)
     {
         // Normaliza para comparação case-insensitive.
         text = text.ToLowerInvariant();
@@ -137,7 +138,7 @@ public class KnowledgeBaseService : IKnowledgeBaseService
     }
 
     // Mapeia a entidade KnowledgeBaseArticle para seu DTO correspondente.
-    private static KnowledgeBaseArticleDto MapToDto(KnowledgeBaseArticle article) => new(
+    private static ArtigoBaseConhecimentoDto MapToDto(KnowledgeBaseArticle article) => new(
         article.Id,
         article.Title,
         article.Category,

@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using SupportSystem.Application.AI;
 using SupportSystem.Application.Common;
@@ -53,7 +54,7 @@ public class TicketService : ITicketService
     }
 
     // Obtém a lista paginada de chamados.
-    public async Task<PagedResult<TicketDto>> GetAsync(int page, int pageSize, TicketStatus? status, Guid? requesterId, Guid? assigneeId, CancellationToken cancellationToken)
+    public async Task<PagedResult<ChamadoDto>> GetAsync(int page, int pageSize, TicketStatus? status, Guid? requesterId, Guid? assigneeId, CancellationToken cancellationToken)
     {
         // Constrói a query base aplicando filtros opcionais.
         var query = _tickets.Query().AsNoTracking();
@@ -82,11 +83,11 @@ public class TicketService : ITicketService
             .ToListAsync(cancellationToken);
 
         var dtos = items.Select(MapToDto).ToList();
-        return new PagedResult<TicketDto>(dtos, total, page, pageSize);
+        return new PagedResult<ChamadoDto>(dtos, total, page, pageSize);
     }
 
     // Obtém um chamado por Id.
-    public async Task<TicketDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<ChamadoDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         // Busca um chamado por id sem rastreamento para leitura.
         var entity = await _tickets.Query().AsNoTracking().FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
@@ -94,7 +95,7 @@ public class TicketService : ITicketService
     }
 
     // Cria um novo chamado.
-    public async Task<TicketDto> CreateAsync(CreateTicketDto dto, CancellationToken cancellationToken)
+    public async Task<ChamadoDto> CreateAsync(CriarChamadoDto dto, CancellationToken cancellationToken)
     {
         // Valida existência do solicitante.
         var requester = await _users.Query().AsNoTracking().FirstOrDefaultAsync(u => u.Id == dto.SolicitanteId, cancellationToken);
@@ -173,7 +174,7 @@ public class TicketService : ITicketService
     }
 
     // Atualiza um chamado existente.
-    public async Task<TicketDto?> UpdateAsync(Guid id, UpdateTicketDto dto, CancellationToken cancellationToken)
+    public async Task<ChamadoDto?> UpdateAsync(Guid id, AtualizarChamadoDto dto, CancellationToken cancellationToken)
     {
         // Busca o ticket para atualização (rastreado).
         var ticket = await _tickets.GetByIdAsync(id, cancellationToken);
@@ -248,7 +249,7 @@ public class TicketService : ITicketService
     }
 
     // Reabre um chamado fechado, se dentro do prazo permitido.
-    public async Task<TicketDto?> ReopenAsync(Guid id, Guid requesterId, CancellationToken cancellationToken)
+    public async Task<ChamadoDto?> ReopenAsync(Guid id, Guid requesterId, CancellationToken cancellationToken)
     {
         // Obtém o ticket para reabertura.
         var ticket = await _tickets.GetByIdAsync(id, cancellationToken);
@@ -291,7 +292,7 @@ public class TicketService : ITicketService
     }
 
     // Obtém o histórico de um chamado.
-    public async Task<IReadOnlyCollection<TicketHistoryDto>> GetHistoryAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<HistoricoChamadoDto>> GetHistoryAsync(Guid id, CancellationToken cancellationToken)
     {
         // Recupera histórico ordenado por data de criação (mais recente primeiro).
         var entries = await _history.Query()
@@ -301,12 +302,12 @@ public class TicketService : ITicketService
             .ToListAsync(cancellationToken);
 
         return entries
-            .Select(h => new TicketHistoryDto(h.Id, h.AuthorId, h.Message, h.CreatedAt, h.StatusSnapshot))
+            .Select(h => new HistoricoChamadoDto(h.Id, h.AuthorId, h.Message, h.CreatedAt, h.StatusSnapshot))
             .ToList();
     }
 
     // Mapeia entidade Ticket para DTO usado pela aplicação (reduzindo campos expostos).
-    private static TicketDto MapToDto(Ticket ticket) => new(
+    private static ChamadoDto MapToDto(Ticket ticket) => new(
         ticket.Id,
         ticket.Title,
         ticket.Description,

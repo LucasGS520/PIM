@@ -5,20 +5,20 @@ namespace SupportSystem.Application.DTOs;
 
 // Conjunto de DTOs utilizados para transportar informações de artigos da Base de Conhecimento entre a API e as camadas internas da aplicação.
 // Retornar dados ao consumidor da API.
-public record KnowledgeBaseArticleDto(
-    Guid Id, // Identificador único do artigo
-    string Titulo, // Título do artigo
-    string Categoria, // Categoria no qual o artigo pertence
-    string Conteudo, // Conteúdo do artigo
-    string PalavrasChave, // Palavras-chave separadas por vírgula para pesquisa
-    bool Publicado // Indica se o artigo está publicado (true) ou rascunho (false)
+public record ArtigoBaseConhecimentoDto(
+    Guid Id,
+    string Titulo,
+    string Categoria,
+    string Conteudo,
+    string PalavrasChave,
+    bool Publicado
 );
 
 
 // DTO utilizado para criação de novos artigos.
 // payload recebido em endpoints POST para criar um novo artigo.
 // Obs: validações (ex.: títulos obrigatórios, tamanho máximo) devem ser aplicadas na camada de aplicação.
-public record CreateKnowledgeBaseArticleDto(
+public record CriarArtigoBaseConhecimentoDto(
     string Titulo, // Título do novo artigo
     string Categoria, // Categoria atribuída ao novo artigo
     string Conteudo, // Conteúdo/descrição do artigo
@@ -29,7 +29,7 @@ public record CreateKnowledgeBaseArticleDto(
 // DTO utilizado para atualização de artigos existentes.
 // payload recebido em endpoints PUT/PATCH para alterar um artigo existente.
 // Obs: O identificador do artigo a ser atualizado normalmente é passado na rota
-public record UpdateKnowledgeBaseArticleDto(
+public record AtualizarArtigoBaseConhecimentoDto(
     string Titulo, // Novo título do artigo ou sem alteração
     string Categoria, // Nova categoria do artigo
     string Conteudo, // Novo conteúdo do artigo

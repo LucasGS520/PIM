@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using SupportSystem.Application.DTOs;
 using SupportSystem.Application.Interfaces;
@@ -44,42 +45,42 @@ public class ChamadosController : ControllerBase
     public async Task<ActionResult> ObterPorIdAsync(Guid id, CancellationToken cancellationToken)
     {
         // Busca o chamado. Retorna 404 se não encontrado.
-        var ticket = await _ticketService.GetByIdAsync(id, cancellationToken);
-        if (ticket is null)
+        var chamado = await _ticketService.GetByIdAsync(id, cancellationToken);
+        if (chamado is null)
         {
             return NotFound();
         }
 
-        return Ok(ticket);
+        return Ok(chamado);
     }
 
     // Cria um novo chamado e retorna sugestões da base de conhecimento relacionadas à descrição.
     [HttpPost]
-    public async Task<ActionResult> CriarAsync([FromBody] CreateTicketDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> CriarAsync([FromBody] CriarChamadoDto dto, CancellationToken cancellationToken)
     {
         // Cria o chamado via serviço de domínio.
-        var ticket = await _ticketService.CreateAsync(dto, cancellationToken);
+        var chamado = await _ticketService.CreateAsync(dto, cancellationToken);
 
         // Solicita sugestões da base de conhecimento com base na descrição informada.
         // Limita a 3 sugestões por padrão.
-        var suggestions = await _knowledgeBaseService.SuggestAsync(dto.Descricao, 3, cancellationToken);
+        var sugestoes = await _knowledgeBaseService.SuggestAsync(dto.Descricao, 3, cancellationToken);
 
         // Retorna 201 com local do recurso e payload contendo o chamado e as sugestões.
-        return CreatedAtAction(nameof(ObterPorIdAsync), new { id = ticket.Id }, new { ticket, suggestions });
+        return CreatedAtAction(nameof(ObterPorIdAsync), new { id = chamado.Id }, new { chamado, sugestoes });
     }
 
     // Atualiza informações do chamado e registra histórico de alterações.
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult> AtualizarAsync(Guid id, [FromBody] UpdateTicketDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> AtualizarAsync(Guid id, [FromBody] AtualizarChamadoDto dto, CancellationToken cancellationToken)
     {
         // Atualiza via serviço; serviço retorna null se o recurso não existir.
-        var updated = await _ticketService.UpdateAsync(id, dto, cancellationToken);
-        if (updated is null)
+        var atualizado = await _ticketService.UpdateAsync(id, dto, cancellationToken);
+        if (atualizado is null)
         {
             return NotFound();
         }
 
-        return Ok(updated);
+        return Ok(atualizado);
     }
 
     // Reabre um chamado dentro do prazo permitido pelo sistema.
@@ -87,13 +88,13 @@ public class ChamadosController : ControllerBase
     public async Task<ActionResult> ReabrirAsync(Guid id, [FromQuery] Guid requesterId, CancellationToken cancellationToken)
     {
         // Lógica de reabertura delegada ao serviço de tickets (valida prazo, autorizações, etc.).
-        var reopened = await _ticketService.ReopenAsync(id, requesterId, cancellationToken);
-        if (reopened is null)
+        var reaberto = await _ticketService.ReopenAsync(id, requesterId, cancellationToken);
+        if (reaberto is null)
         {
             return NotFound();
         }
 
-        return Ok(reopened);
+        return Ok(reaberto);
     }
 
     // Recupera o histórico de interações e alterações de um chamado.
@@ -101,7 +102,7 @@ public class ChamadosController : ControllerBase
     public async Task<ActionResult> ObterHistoricoAsync(Guid id, CancellationToken cancellationToken)
     {
         // Retorna histórico (eventos, comentários, mudanças de status) fornecido pelo serviço.
-        var history = await _ticketService.GetHistoryAsync(id, cancellationToken);
-        return Ok(history);
+        var historico = await _ticketService.GetHistoryAsync(id, cancellationToken);
+        return Ok(historico);
     }
 }
